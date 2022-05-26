@@ -1,0 +1,31 @@
+#!/usr/bin/python3
+import matplotlib.pyplot as plt
+import numpy as np
+import sys
+import struct
+from wavhelp import *
+
+if __name__ == "__main__":
+
+    maxchannels = 0
+    for n, f in enumerate(sys.argv[1:]):
+
+        fig = plt.figure()
+
+        signal, framerate, channels, BitsPerSample = wav_read(f, True)
+
+        maxchannels = max(channels, maxchannels)
+
+        # before looping, create the ax object required by sharex, sharey
+        ax = fig.add_subplot(maxchannels, 1, 1)
+
+        for channel in range(channels):
+            ax = fig.add_subplot(maxchannels, 1, channel+1, sharex=ax, sharey=ax)
+            ax.plot(signal[channel::channels], label=sys.argv[1+n] + ', channel ' + str(channel))
+            plt.ylabel('Amplitude')
+            plt.xlabel('Sample')
+
+        plt.legend()
+
+    plt.show()
+

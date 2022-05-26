@@ -1,0 +1,137 @@
+#!/usr/bin/python3
+"""spectrum
+A script that plots the spectrum of one or more .wav files using FFT.
+
+Usage:
+    spectrum [--fftsize=FFTSIZE] [--peaks] [--window] FILE...
+    spectrum (-v | --version)
+    spectrum (-h | --help)
+
+Options:
+    -h --help           Show this screen.
+    -v --version        Show version.
+    --fftsize=FFTSIZE   FFT size 
+    --hamming
+    --peaks             Autodetect peaks in the frequency domain
+                        and highlight them on the plot.
+
+Example:
+    spectrum file.wav
+    spectrum file1.wav file2.wav file3.wav
+    spectrum --fftsize 8096 --autodetect file1.wav
+"""
+
+import sys
+from math import ceil
+from wavhelp import *
+
+try:
+    from docopt import docopt
+except ImportError:
+    exit("This software refuses to run until docopt is installed:\n$ pip install docopt")
+
+try:
+    import numpy as np
+except ImportError:
+    exit("This software refuses to run until numpy is installed:\n$ pip install numpy")
+
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    exit("This software refuses to run until matplotlib is installed:\n$ pip install matplotlib")
+
+try:
+    import peakutils
+except ImportError:
+    exit("This software refuses to run until peakutils is installed:\n$ pip install peakutils")
+
+def dbfft(x, rate, win=None, ref=32768):
+    """
+    Calculate spectrum in dB scale
+    Args:
+        x: input signal
+        rate: sampling frequency
+        win: vector containing window samples (same length as x).
+             If not provided, then rectangular window is used by default.
+        ref: reference value used for dBFS scale. 32768 for int16 and 1 for float
+
+    Returns:
+        freq: frequency vector
+        s_db: spectrum in dB scale
+    """
+
+    N = len(x)  # Length of input sequence
+    
+    if win is not None:
+        if len(x) != len(win):
+            raise ValueError('Signal and window must be of the same length')
+        x = x * win
+
+    # Calculate real FFT and frequency vector
+    sp = np.fft.rfft(x)
+    freq = np.arange(len(sp)) / (float(N) / rate)
+
+    # Scale the magnitude of FFT by window and factor of 2,
+    # because we are using half of FFT spectrum.
+    if win is not None:
+        s_mag = np.abs(sp) * 2 / np.sum(win)
+    else:
+        s_mag =  np.abs(sp) * 2
+
+    # Convert to dBFS
+    s_dbfs = 20 * np.log10(s_mag/ref)
+
+    return freq, s_dbfs
+
+
+def main(args):
+
+    fig = plt.figure()
+    fig.canvas.set_window_title(sys.argv[0])
+
+    for n, f in enumerate(args['FILE']):
+
+        signal, framerate, channels, BitsPerSample = wav_read(f)
+
+        for channel in range(channels):
+            # Take slice
+            try:
+                N = int(args['--fftsize'])
+            except TypeError:
+                N = int(len(signal) / channels)
+            win = np.hamming(N)
+
+            if args['--window'] is True:
+                freq, s_dbfs = dbfft(signal[channel::channels][0:N], framerate, win)
+            else:
+                freq, s_dbfs = dbfft(signal[channel::channels][0:N], framerate)
+            
+            peaks = peakutils.indexes(s_dbfs, thres=0.9, min_dist=N/512)
+
+            try:
+                # Scale attenuation relative to to fundamental power
+                s_db = s_dbfs - s_dbfs[peaks[0]]
+            except IndexError:
+                # Couldn't find fundamental
+                s_db = s_dbfs
+
+            ax1 = fig.add_subplot(111)
+            ax1.plot(freq, s_db, label=args['FILE'][n] + ', channel ' + str(channel))
+            ticks = [0.0]
+            if args['--peaks'] is True:
+                for peak in peaks:
+                    roundpeak = round(freq[peak], 3)
+                    # This clogs up the interface when plotting multiple files with multiple channels.
+                    # ax1.axvline(freq[peak], color='coral', linestyle=':', linewidth=1)
+                    # ax1.axhline(s_db[peak], color='coral', linestyle=':', linewidth=1)
+                    plt.text(freq[peak], s_db[peak], str(roundpeak) + " Hz, " + str(round(s_db[peak], 1)) + "dB", rotation=80)
+
+    ax1.axhline(-40, color='slategray', linestyle='-.', linewidth=1)
+    plt.xlabel('Frequency [Hz]')
+    plt.ylabel('Attenuation [dB]')
+    plt.legend()
+    plt.show()
+
+if __name__ == "__main__":
+    args = docopt(__doc__, version='0.1')
+    main(args)

@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""Plot data from TI .dat format produced using CCS memory dump 
+feature of the debugger.
+
+Usage:
+    datplot (--int16|--uint16|--int32|--uint32|--float|--double) [--start <START>] [--step <STEP>] [(--convert --rate <RATE>) --pcm] FILE...
+    datplot (-v | --version)
+    datplot (-h | --help)
+
+Options:
+    -h --help           Show this screen.
+    -v --version        Show version.
+    --int16             Interpret data as 16-bit signed int.
+    --uint16            Interpret data as 16-bit unsigned int.
+    --int32             Interpret data as 32-bit signed int.
+    --uint32            Interpret data as 32-bit unsigned int.
+    --float             Interpret data as 32-bit single precision floating point.
+    --double            Interpret data as 64-bit double precision floating point.
+    --start <START>     Start index [default: 0].
+    --step <STEP>       Step index [default: 1].
+    --convert           Perform .wav conversion.
+    --rate <RATE>       Specify the .wav sampling rate.
+    --pcm               When converting to .wav, specify that we want PCM format. Floats in PCM range between -1.0...1.0.
+
+Example:
+    # plot file by interpretting samples as double
+    datplot --double path/to/file
+
+    # plot file1 and file2 by interpretting samples as unsigned integers 32-bit wide
+    datplot --uint32 path/to/file1 path/to/file2
+
+    # plot file by interpretting samples as signed integers 16-bit wide
+    # start at sample 0 with a step of 2 (discards samples 1, 3, ...)
+    datplot --int16 path/to/file --start=0 --step=2
+"""
+
+import sys
+import struct
+from os.path import basename, dirname, realpath, splitext
+from wavhelp import *
+
+try:
+    from docopt import docopt
+except ImportError:
+    exit("This software refuses to run until docopt is installed:\n$ pip install docopt")
+
+try:
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
+except ImportError:
+    exit("This software refuses to run until matplotlib is installed:\n$ pip install matplotlib")
+
+try:
+    import numpy
+except ImportError:
+    exit("This software refuses to run until numpy is installed:\n$ pip install numpy")
+
+try:
+    import scipy.optimize
+except ImportError:
+    exit("This software refuses to run until scipy is installed:\n$ pip install scipy")
+
+
+def fit_sin(tt, yy):
+    '''Fit sin to the input time sequence, and return fitting parameters "amp", "omega", "phase", "offset", "freq", "period" and "fitfunc"'''
+    tt = numpy.array(tt)
+    yy = numpy.array(yy)
+    ff = numpy.fft.fftfreq(len(tt), (tt[1]-tt[0]))   # assume uniform spacing
+    Fyy = abs(numpy.fft.fft(yy))
+    guess_freq = abs(ff[numpy.argmax(Fyy[1:])+1])   # excluding the zero frequency "peak", which is related to offset
+    guess_amp = numpy.std(yy) * 2.**0.5
+    guess_offset = numpy.mean(yy)
+    guess = numpy.array([guess_amp, 2.*numpy.pi*guess_freq, 0., guess_offset])
+
+    def sinfunc(t, A, w, p, c):  return A * numpy.sin(w*t + p) + c
+    popt, pcov = scipy.optimize.curve_fit(sinfunc, tt, yy, p0=guess)
+    A, w, p, c = popt
+    f = w/(2.*numpy.pi)
+    fitfunc = lambda t: A * numpy.sin(w*t + p) + c
+    return {"amp": A, "omega": w, "phase": p, "offset": c, "freq": f, "period": 1./f, "fitfunc": fitfunc, "maxcov": numpy.max(pcov), "rawres": (guess,popt,pcov)}
+
+def main(args):
+    ax=plt.gca()
+    ax.get_yaxis().get_major_formatter().set_scientific(False)
+    
+    if args['--convert'] != None: convert = True
+
+    for f in args['FILE']:
+        swset = False
+        sw = 0
+        if args['--convert']:
+            # Write signal to file
+            sr = float(args['--rate'])
+            wavpath = dirname(realpath(f)) + '/' + splitext(basename(f))[0] + '.wav'
+
+        Y = []
+        for n, line in enumerate(open(f, 'r')):
+            if n > 0: # firstTI .dat line is irrelevant, skip it
+                sf = ''
+                v = None
+                try:
+                    hexstr = line[2:].split()
+                    if args['--int16'] is True:
+                        v = struct.unpack('!h', bytes.fromhex(hexstr[0]))
+                        sf = 'h'
+                        sw = 2
+                    elif args['--uint16'] is True:
+                        v = struct.unpack('!H', bytes.fromhex(hexstr[0]))
+                        sf = 'H'
+                        sw = 2
+                    elif args['--int32'] is True:
+                        v = struct.unpack('!l', bytes.fromhex(hexstr[0]))
+                        sf = 'i'
+                        sw = 4
+                    elif args['--uint32'] is True:
+                        v = struct.unpack('!L', bytes.fromhex(hexstr[0]))
+                        sf = 'I'
+                        sw = 4
+                    elif args['--float'] is True:
+                        v = struct.unpack('!f', bytes.fromhex(hexstr[0]))
+                        sf = 'f'
+                        sw = 4
+                    elif args['--double'] is True:
+                        v = struct.unpack('!d', bytes.fromhex(hexstr[0]))
+                        sf = 'd'
+                        sw = 8
+                except (TypeError, struct.error) as e:
+                    print(str(e))
+                    print("I'm having troubles understanding the file.\nTry changing the data format.") 
+                    return 0
+
+                start = int(args['--start'])
+                step = int(args['--step'])
+                # skip until specified start
+                if n-1 < start:
+                    continue
+
+                if (n-1-start) % step != 0:
+                    continue
+
+                Y.append(v[0])
+
+        # find and remove the DC offset using sine curve fitting
+        tt = numpy.linspace(0, len(Y) - 1, len(Y)) # time vector, use (0, len(Y) / sr, len(Y)) instead if freq is relevant.
+        res = fit_sin(tt, Y) # curve fitting
+        # print("Amplitude=%(amp)s, Angular freq.=%(omega)s, phase=%(phase)s, offset=%(offset)s, Max. Cov.=%(maxcov)s" % res)
+        Y = [y - res['offset'] for y in Y] # DC offset removal
+
+        # scale between -1.0 and 1.0 for float/double
+        Yspan = max(abs(max(Y)), abs(min(Y)))
+        if args['--convert'] and args['--pcm'] and (args['--float'] or args['--double']):
+            Y = [y / Yspan for y in Y]
+
+        if args['--convert']:
+            if args['--float'] or args['--double']:
+                wavcontent = wav_write_float(Y, sr, int(sw), sf)
+            else:
+                wavcontent = wav_write_int(Y, sr, int(sw), sf)
+
+            wavf=open(wavpath, 'wb')
+            wavf.write(wavcontent)
+            wavf.close()
+
+        X = range(len(Y)-1)
+
+        # due to what seems to be a matplotlib bug, this doesn't work
+        # ax.get_yaxis().set_major_formatter(ticker.FormatStrFormatter("%x"))
+
+        plt.plot(Y, label=basename(f), linestyle='-')
+
+    plt.legend()
+    plt.show()
+
+if __name__ == "__main__":
+    args = docopt(__doc__, version='0.1')
+    main(args)
