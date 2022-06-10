@@ -34,6 +34,7 @@ vlib activehdl/axi_infrastructure_v1_1_0
 vlib activehdl/axi_register_slice_v2_1_19
 vlib activehdl/axi_data_fifo_v2_1_18
 vlib activehdl/axi_crossbar_v2_1_20
+vlib activehdl/axi_bram_ctrl_v4_1_1
 vlib activehdl/axi_protocol_converter_v2_1_19
 vlib activehdl/axi_clock_converter_v2_1_18
 vlib activehdl/axi_dwidth_converter_v2_1_19
@@ -72,6 +73,7 @@ vmap axi_infrastructure_v1_1_0 activehdl/axi_infrastructure_v1_1_0
 vmap axi_register_slice_v2_1_19 activehdl/axi_register_slice_v2_1_19
 vmap axi_data_fifo_v2_1_18 activehdl/axi_data_fifo_v2_1_18
 vmap axi_crossbar_v2_1_20 activehdl/axi_crossbar_v2_1_20
+vmap axi_bram_ctrl_v4_1_1 activehdl/axi_bram_ctrl_v4_1_1
 vmap axi_protocol_converter_v2_1_19 activehdl/axi_protocol_converter_v2_1_19
 vmap axi_clock_converter_v2_1_18 activehdl/axi_clock_converter_v2_1_18
 vmap axi_dwidth_converter_v2_1_19 activehdl/axi_dwidth_converter_v2_1_19
@@ -487,10 +489,15 @@ vlog -work xil_defaultlib  -v2k5 "+incdir+../../../../daq2_kc705.srcs/sources_1/
 
 vcom -work xil_defaultlib -93 \
 "../../../bd/system/ip/system_rst_axi_ddr_cntrl_200M_0/sim/system_rst_axi_ddr_cntrl_200M_0.vhd" \
-"../../../bd/system/ip/system_lmb_bram_if_cntlr_0_0/sim/system_lmb_bram_if_cntlr_0_0.vhd" \
+
+vcom -work axi_bram_ctrl_v4_1_1 -93 \
+"../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/70bf/hdl/axi_bram_ctrl_v4_1_rfs.vhd" \
+
+vcom -work xil_defaultlib -93 \
+"../../../bd/system/ip/system_axi_bram_ctrl_0_0/sim/system_axi_bram_ctrl_0_0.vhd" \
 
 vlog -work xil_defaultlib  -v2k5 "+incdir+../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/ec67/hdl" "+incdir+../../../bd/system/ipshared/6453" "+incdir+../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/6453" \
-"../../../bd/system/ip/system_lmb_bram_if_cntlr_0_bram_1/sim/system_lmb_bram_if_cntlr_0_bram_1.v" \
+"../../../bd/system/ip/system_blk_mem_gen_0_0/sim/system_blk_mem_gen_0_0.v" \
 "../../../bd/system/ip/system_tier2_xbar_0_0/sim/system_tier2_xbar_0_0.v" \
 "../../../bd/system/ip/system_tier2_xbar_1_0/sim/system_tier2_xbar_1_0.v" \
 "../../../bd/system/ip/system_tier2_xbar_2_0/sim/system_tier2_xbar_2_0.v" \
@@ -500,6 +507,7 @@ vlog -work axi_protocol_converter_v2_1_19  -v2k5 "+incdir+../../../../daq2_kc705
 
 vlog -work xil_defaultlib  -v2k5 "+incdir+../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/ec67/hdl" "+incdir+../../../bd/system/ipshared/6453" "+incdir+../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/6453" \
 "../../../bd/system/ip/system_auto_pc_0/sim/system_auto_pc_0.v" \
+"../../../bd/system/ip/system_auto_pc_1/sim/system_auto_pc_1.v" \
 
 vlog -work axi_clock_converter_v2_1_18  -v2k5 "+incdir+../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/ec67/hdl" "+incdir+../../../bd/system/ipshared/6453" "+incdir+../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/6453" \
 "../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/ac9d/hdl/axi_clock_converter_v2_1_vl_rfs.v" \
@@ -510,7 +518,7 @@ vlog -work axi_dwidth_converter_v2_1_19  -v2k5 "+incdir+../../../../daq2_kc705.s
 vlog -work xil_defaultlib  -v2k5 "+incdir+../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/ec67/hdl" "+incdir+../../../bd/system/ipshared/6453" "+incdir+../../../../daq2_kc705.srcs/sources_1/bd/system/ipshared/6453" \
 "../../../bd/system/ip/system_auto_us_cc_df_0/sim/system_auto_us_cc_df_0.v" \
 "../../../bd/system/ip/system_auto_us_cc_df_1/sim/system_auto_us_cc_df_1.v" \
-"../../../bd/system/ip/system_auto_pc_1/sim/system_auto_pc_1.v" \
+"../../../bd/system/ip/system_auto_pc_2/sim/system_auto_pc_2.v" \
 "../../../bd/system/ip/system_auto_us_cc_df_2/sim/system_auto_us_cc_df_2.v" \
 "../../../bd/system/ip/system_auto_us_cc_df_3/sim/system_auto_us_cc_df_3.v" \
 "../../../bd/system/ip/system_auto_us_cc_df_4/sim/system_auto_us_cc_df_4.v" \
