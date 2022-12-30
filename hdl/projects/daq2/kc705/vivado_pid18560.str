@@ -1,0 +1,147 @@
+/*
+
+Xilinx Vivado v2019.1 (64-bit) [Major: 2019, Minor: 1]
+SW Build: 2552052 on Fri May 24 14:49:42 MDT 2019
+IP Build: 2548770 on Fri May 24 18:01:18 MDT 2019
+
+Process ID (PID): 18560
+License: Customer
+
+Current time: 	Fri Dec 30 10:06:37 CST 2022
+Time zone: 	Central Standard Time (America/Chicago)
+
+OS: Windows 10
+OS Version: 10.0
+OS Architecture: amd64
+Available processors (cores): 8
+
+Screen size: 1920x1080
+Screen resolution (DPI): 100
+Available screens: 1
+Available disk space: 0 GB
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+
+Java version: 	9.0.4 64-bit
+Java home: 	D:/Xilinx/Vivado/2019.1/tps/win64/jre9.0.4
+Java executable location: 	D:/Xilinx/Vivado/2019.1/tps/win64/jre9.0.4/bin/java.exe
+Java initial memory (-Xms): 	128 MB
+Java maximum memory (-Xmx):	 3 GB
+
+
+User name: 	Kerlinlab02
+User home directory: C:/Users/Kerlinlab02
+User working directory: D:/mhz-closed-loop-master/hdl/projects/daq2/kc705
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: D:/Xilinx/Vivado
+HDI_APPROOT: D:/Xilinx/Vivado/2019.1
+RDI_DATADIR: D:/Xilinx/Vivado/2019.1/data
+RDI_BINDIR: D:/Xilinx/Vivado/2019.1/bin
+
+Vivado preferences file location: C:/Users/Kerlinlab02/AppData/Roaming/Xilinx/Vivado/2019.1/vivado.xml
+Vivado preferences directory: C:/Users/Kerlinlab02/AppData/Roaming/Xilinx/Vivado/2019.1/
+Vivado layouts directory: C:/Users/Kerlinlab02/AppData/Roaming/Xilinx/Vivado/2019.1/layouts
+PlanAhead jar file location: 	D:/Xilinx/Vivado/2019.1/lib/classes/planAhead.jar
+Vivado log file location: 	D:/mhz-closed-loop-master/hdl/projects/daq2/kc705/vivado.log
+Vivado journal file location: 	D:/mhz-closed-loop-master/hdl/projects/daq2/kc705/vivado.jou
+Engine tmp dir: 	D:/mhz-closed-loop-master/hdl/projects/daq2/kc705/.Xil/Vivado-18560-DESKTOP-I0NVMB5
+
+Xilinx Environment Variables
+----------------------------
+XILINX: D:/Xilinx/Vivado/2019.1/ids_lite/ISE
+XILINX_DSP: D:/Xilinx/Vivado/2019.1/ids_lite/ISE
+XILINX_PLANAHEAD: D:/Xilinx/Vivado/2019.1
+XILINX_SDK: D:/Xilinx/SDK/2019.1
+XILINX_VIVADO: D:/Xilinx/Vivado/2019.1
+XILINX_VIVADO_HLS: D:/Xilinx/Vivado/2019.1
+
+
+GUI allocated memory:	154 MB
+GUI max memory:		3,072 MB
+Engine allocated memory: 674 MB
+
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// Tcl Message: start_gui 
+// TclEventType: PROJECT_OPEN_DIALOG
+// [GUI Memory]: 97 MB (+98789kb) [00:00:07]
+// [Engine Memory]: 591 MB (+468355kb) [00:00:07]
+// by (cl):  Open Project : addNotify
+// Opening Vivado Project: D:\mhz-closed-loop-master\hdl\projects\daq2\kc705\daq2_kc705.xpr. Version: Vivado v2019.1 
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// Tcl Message: open_project D:/mhz-closed-loop-master/hdl/projects/daq2/kc705/daq2_kc705.xpr 
+// TclEventType: MSGMGR_MOVEMSG
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// TclEventType: RUN_CURRENT
+// TclEventType: MSGMGR_REFRESH_MSG
+// TclEventType: PROJECT_DASHBOARD_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// HMemoryUtils.trashcanNow. Engine heap size: 720 MB. GUI used memory: 48 MB. Current time: 12/30/22, 10:06:39 AM CST
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: PROJECT_NEW
+// [Engine Memory]: 822 MB (+211596kb) [00:00:31]
+// [GUI Memory]: 108 MB (+6535kb) [00:00:33]
+// [GUI Memory]: 116 MB (+3240kb) [00:00:33]
+// [Engine Memory]: 867 MB (+3476kb) [00:00:33]
+// WARNING: HEventQueue.dispatchEvent() is taking  4215 ms.
+// Tcl Message: open_project D:/mhz-closed-loop-master/hdl/projects/daq2/kc705/daq2_kc705.xpr 
+// Tcl Message: Scanning sources... Finished scanning sources 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1700] Loaded user IP repository 'd:/mhz-closed-loop-master/hdl/library'. INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2019.1/data/ip'. 
+// HMemoryUtils.trashcanNow. Engine heap size: 881 MB. GUI used memory: 62 MB. Current time: 12/30/22, 10:07:02 AM CST
+// Tcl Message: open_project: Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 911.328 ; gain = 275.285 
+// [Engine Memory]: 982 MB (+75036kb) [00:00:35]
+// Project name: daq2_kc705; location: D:/mhz-closed-loop-master/hdl/projects/daq2/kc705; part: xc7k325tffg900-2
+dismissDialog("Open Project"); // by (cl)
+// a (cl): Critical Messages: addNotify
+// [Engine Memory]: 1,041 MB (+10159kb) [00:00:41]
+// Tcl Message: update_compile_order -fileset sources_1 
+selectButton(PAResourceAtoD.CmdMsgDialog_OK, "OK"); // f (a)
+dismissDialog("Critical Messages"); // a (cl)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "IP Sources", 1); // i (N, cl)
+// PAPropertyPanels.initPanels (system.bd) elapsed time: 0.2s
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Block Designs, system]", 1, true); // B (F, cl) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Block Designs, system]", 1, true, false, false, false, false, true); // B (F, cl) - Double Click - Node
+// by (cl):  Open Block Design : addNotify
+// TclEventType: LOAD_FEATURE
+// Tcl Message: open_bd_design {D:/mhz-closed-loop-master/hdl/projects/daq2/kc705/daq2_kc705.srcs/sources_1/bd/system/system.bd} 
+// TclEventType: RSB_CHANGE_CURRENT_DIAGRAM
+// TclEventType: LOAD_FEATURE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_OPEN_DIAGRAM
+// [Engine Memory]: 1,101 MB (+8628kb) [00:00:49]
+// Tcl Message: Successfully read diagram <system> from BD file <D:/mhz-closed-loop-master/hdl/projects/daq2/kc705/daq2_kc705.srcs/sources_1/bd/system/system.bd> 
+// HMemoryUtils.trashcanNow. Engine heap size: 1,150 MB. GUI used memory: 66 MB. Current time: 12/30/22, 10:07:19 AM CST
+// TclEventType: RSB_OPEN_DIAGRAM
+// WARNING: HEventQueue.dispatchEvent() is taking  3158 ms.
+// TclEventType: RSB_CONNECTION_CHANGE
+closeView(PAResourceOtoP.PAViews_PROJECT_SUMMARY, "Project Summary"); // v
+// TclEventType: RSB_LOCK_CHANGE
+// Tcl Message: open_bd_design: Time (s): cpu = 00:00:11 ; elapsed = 00:00:09 . Memory (MB): peak = 1258.844 ; gain = 59.555 
+dismissDialog("Open Block Design"); // by (cl)
+floatFrame(PAResourceOtoP.PAViews_SYSTEM, "Diagram"); // az (aK, cl)
+// PAResourceOtoP.PAViews_SYSTEM: System: float view
+maximizeFrame(PAResourceOtoP.PAViews_SYSTEM, "Diagram"); // az (aK, aM)
+// [GUI Memory]: 133 MB (+11231kb) [00:01:03]
