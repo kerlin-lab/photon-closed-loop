@@ -1,4 +1,4 @@
-# thesis-project
+# thesis-project of Elif Cetin
 
 ## Compiling DAQ board 
 
